@@ -1,6 +1,6 @@
 <?php
  
-$connect = mysqli_connect("localhost", "admin", "", "db_mysql");
+$connect = mysqli_connect("localhost", "admin", "QsspNwur7az5", "d4g");
 if ($connect->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -12,10 +12,10 @@ if(isset($_POST["query"]))
 	$search = mysqli_real_escape_string($connect, $_POST["query"]);
 
 	$query = "
-	SELECT nom, code FROM city 
-	WHERE nom LIKE '%".$search."%'
-	UNION ALL SELECT nom, code FROM city 
-	WHERE code LIKE '%".$search."%' LIMIT 0,50
+	SELECT nom_com FROM book3 
+	WHERE nom_com LIKE '%".$search."%'
+	UNION ALL SELECT nom_com FROM book3 
+	WHERE code_postal LIKE '%".$search."%' LIMIT 0,50
     ";
     $result = mysqli_query($connect, $query);
     if(mysqli_num_rows($result) > 0)
@@ -25,8 +25,8 @@ if(isset($_POST["query"]))
             echo '
             <div class="table-responsive">
                 <form method="post" action="index.php">
-                    <input type="hidden" name="ville" value="'.$row["nom"].'" />
-                    <input type="submit" value="'.$row["nom"].'" />
+                    <input type="hidden" name="ville" value="'.$row["nom_com"].'" />
+                    <input type="submit" value="'.$row["nom_com"].'" />
                 </form>
             </div>
             ';
