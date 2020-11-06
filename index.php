@@ -1,34 +1,17 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>recherche</title>
+		<title>Internet Explorers - D4G</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <link rel="stylesheet" href="main.css">
-        <style>
-        .team4{
-            background-image: url('https://cdn.hipwallpaper.com/i/18/1/Vaq56r.jpg');
-        }
-        body {
-            background-image: url('https://cdn.hipwallpaper.com/i/18/1/Vaq56r.jpg');
-            background-repeat: no-repeat;
-        }
-        </style>
-        <div class="team4" align="center">
-            <h1>Internet Explorers</h1>
-            <a href="https://twitter.com/Interne82423016?s=20" ><img src="https://upload.wikimedia.org/wikipedia/fr/thumb/c/c8/Twitter_Bird.svg/60px-Twitter_Bird.svg.png" alt="logo de Twitter"></a>
-        </div>
-        <br />
-        <h2 align="center">Please type your informations</h2><br />
 	</head>
 	<body>
         <div class="form-group"  accept-charset="utf-8">
             <div class="input-group" align="center">
-                <input type="text" name="search_city" id="search_city" placeholder="Your city" class="form-control" style="border-radius:5px;"/>
+                <input type="text" name="search_city" id="search_city" placeholder="Type your city or zip code" class="form-control" style="border-radius:5px;"/>
             </div>
         </div>
-        <br />
         <div id="result"  align="center"></div>
-		<br />
         <?php
         if(isset($_POST["ville"]))
         {
@@ -40,8 +23,8 @@
             {
                 die('Erreur : '.$e->getMessage());
             }
-            $reponse = $bdd->prepare('SELECT main.code_postal,nom_dep,nom_reg,nom_com,book3.code_dep,book3.code_reg,
-            avg(acces_interface),avg(acces_info),avg(comp_admin),avg(comp_num),avg(score_global),count(main.code_postal) FROM d4g.main
+            $reponse = $bdd->prepare('SELECT main.code_postal,nom_dep,nom_reg,main.nom_com,book3.code_dep,book3.code_reg,
+            round(avg(acces_interface)),round(avg(acces_info)),round(avg(comp_admin)),round(avg(comp_num)),round(avg(score_global)),count(main.code_postal) FROM d4g.main
             join book3 on book3.code_postal=main.code_postal
             where book3.nom_com=?');
             $reponse->execute(array($_POST["ville"]));
@@ -61,11 +44,11 @@
                 $dep=$donnees['nom_dep'];
                 $reg=$donnees['nom_reg'];
                 $zip=$donnees['code_postal'];
-                $global_score+=$donnees['avg(score_global)'];
-                $interfaces+=$donnees['avg(acces_interface)'];
-                $informations+=$donnees['avg(acces_info)'];
-                $admin+=$donnees['avg(comp_admin)'];
-                $num+=$donnees['avg(comp_num)'];
+                $global_score+=$donnees['round(avg(score_global))'];
+                $interfaces+=$donnees['round(avg(acces_interface))'];
+                $informations+=$donnees['round(avg(acces_info))'];
+                $admin+=$donnees['round(avg(comp_admin))'];
+                $num+=$donnees['round(avg(comp_num))'];
                 $codedep=$donnees['code_dep'];
                 $codereg=$donnees['code_reg'];
             }
@@ -94,7 +77,6 @@
                     <td>'.$num.'</td>
                 </tr>
             </table>';
-
             $avgdep=0;
             $reponse = $bdd->prepare('SELECT nom_dep,avag FROM d4g.department
             where nom_dep=?');
@@ -104,18 +86,18 @@
                 if ($donnees['avag']==0)
                 {
                     $rep = $bdd->prepare('SELECT code_dep,
-                    avg(score_global) FROM d4g.main
+                    round(avg(score_global)) FROM d4g.main
                     where code_dep=?');
                     $rep->execute(array($codedep));
                     while ($data = $rep->fetch())
                     {
-                        $avgdep=$data['avg(score_global)'];
+                        $avgdep=$data['round(avg(score_global))'];
                     }
-                    /*$rempli = $bdd->prepare('UPDATE d4g.department SET avag=? WHERE code_dep=?');
+                    $rempli = $bdd->prepare('UPDATE d4g.department SET avag=? WHERE code_dep=?');
                     $rempli->execute(array(
                         $avgdep,
                         $codedep
-                    ));*/
+                    ));
                     $rep->closeCursor();
                 }
                 else
@@ -135,18 +117,18 @@
                 if ($donnees['avag']==0)
                 {
                     $rep = $bdd->prepare('SELECT code_reg,
-                    avg(score_global) FROM d4g.main
+                    round(avg(score_global)) FROM d4g.main
                     where code_reg=?');
                     $rep->execute(array($codereg));
                     while ($data = $rep->fetch())
                     {
-                        $avgreg=$data['avg(score_global)'];
+                        $avgreg=$data['round(avg(score_global))'];
                     }
-                    /*$rempli = $bdd->prepare('UPDATE d4g.region SET avag=? WHERE code_reg=?');
+                    $rempli = $bdd->prepare('UPDATE d4g.region SET avag=? WHERE code_reg=?');
                     $rempli->execute(array(
                         $avgreg,
                         $codereg
-                    ));*/
+                    ));
                     $rep->closeCursor();
                 }
                 else
