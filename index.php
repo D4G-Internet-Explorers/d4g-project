@@ -41,7 +41,7 @@
                 die('Erreur : '.$e->getMessage());
             }
             $reponse = $bdd->prepare('SELECT main.code_postal,nom_dep,nom_reg,nom_com,book3.code_dep,book3.code_reg,
-            avg(acces_interface),avg(acces_info),avg(comp_admin),avg(comp_num),avg(score_global),count(main.code_postal) FROM D4G.main
+            avg(acces_interface),avg(acces_info),avg(comp_admin),avg(comp_num),avg(score_global),count(main.code_postal) FROM d4g.main
             join book3 on book3.code_postal=main.code_postal
             where book3.nom_com=?');
             $reponse->execute(array($_POST["ville"]));
@@ -96,7 +96,7 @@
             </table>';
 
             $avgdep=0;
-            $reponse = $bdd->prepare('SELECT nom_dep,avag FROM D4G.department
+            $reponse = $bdd->prepare('SELECT nom_dep,avag FROM d4g.department
             where nom_dep=?');
             $reponse->execute(array($dep));
             while ($donnees = $reponse->fetch())
@@ -104,14 +104,14 @@
                 if ($donnees['avag']==0)
                 {
                     $rep = $bdd->prepare('SELECT code_dep,
-                    avg(score_global) FROM D4G.main
+                    avg(score_global) FROM d4g.main
                     where code_dep=?');
                     $rep->execute(array($codedep));
                     while ($data = $rep->fetch())
                     {
                         $avgdep=$data['avg(score_global)'];
                     }
-                    /*$rempli = $bdd->prepare('UPDATE D4G.department SET avag=? WHERE code_dep=?');
+                    /*$rempli = $bdd->prepare('UPDATE d4g.department SET avag=? WHERE code_dep=?');
                     $rempli->execute(array(
                         $avgdep,
                         $codedep
@@ -127,7 +127,7 @@
             
             
             $avgreg=0;
-            $reponse = $bdd->prepare('SELECT nom_reg,avag FROM D4G.region
+            $reponse = $bdd->prepare('SELECT nom_reg,avag FROM d4g.region
             where nom_reg=?');
             $reponse->execute(array($reg));
             while ($donnees = $reponse->fetch())
@@ -135,14 +135,14 @@
                 if ($donnees['avag']==0)
                 {
                     $rep = $bdd->prepare('SELECT code_reg,
-                    avg(score_global) FROM D4G.main
+                    avg(score_global) FROM d4g.main
                     where code_reg=?');
                     $rep->execute(array($codereg));
                     while ($data = $rep->fetch())
                     {
                         $avgreg=$data['avg(score_global)'];
                     }
-                    /*$rempli = $bdd->prepare('UPDATE D4G.region SET avag=? WHERE code_reg=?');
+                    /*$rempli = $bdd->prepare('UPDATE d4g.region SET avag=? WHERE code_reg=?');
                     $rempli->execute(array(
                         $avgreg,
                         $codereg
